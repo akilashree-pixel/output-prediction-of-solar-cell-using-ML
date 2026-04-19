@@ -1,1 +1,44 @@
+#include<LiquidCrystal.h>
+LiquidCrystal lcd(12,11,5,4,3,2);
+int lightpin=A0;
+int solarpin=A1;
+int light value=0;
+int solar value=0;
+float predicted voltage=0;
+float actual voltage=0;
+void setup(){
+ lcd.begin(16,2);
+ serial.begin(9600);
+
+ lcd.print("solar prediction");
+ delay(2000);
+ lcd.clear();
+}
+void loop(){
+ lightvalue=analogRead(lightpin);
+ solarvalue=analogvalue(solarpin);
+ predicted volatge=0.0048*lightvalu+0.1;
+ actualvolatge=solarvalue*(5.0/1023.0);
+
+ lcd.setCursor(0,0);
+ lcd.print("pred:");
+ lcd.print(predicted voltage);
+ lcd.print("v");
+
+ lcd.setCursor(0,1);
+ lcd.print("act:");
+ lcd.print("actualvoltage:");
+ lcd.print("v");
+
+ serial.print("light:");
+ serial.print("lightValue);
+
+ serial.print("predicted:");
+ serial.print("predictedvoltage");
+
+ serial.print("actual:");
+ serial.print("actualvoltage");
+
+ delay(10000);
+}
 
