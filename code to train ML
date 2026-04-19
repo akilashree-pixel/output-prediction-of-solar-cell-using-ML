@@ -1,1 +1,74 @@
+#include <LiquidCrystal.h>
 
+LiquidCrystal lcd(12,11,5,4,3,2);
+
+int lightPin = A0;
+int solarPin = A1;
+
+int lightValue = 0;
+int solarValue = 0;
+
+float m = 0.0010;
+float c = 2.0000;
+
+float predictedVoltage = 0;
+float actualVoltage = 0;
+float error = 0;
+
+void setup()
+{
+  lcd.begin(16,2);
+  Serial.begin(9600);
+
+  lcd.print("Smart ML Solar");
+  delay(2000);
+  lcd.clear();
+}
+
+void loop()
+{
+  lightValue = analogRead(lightPin);
+  solarValue = analogRead(solarPin);
+
+  actualVoltage = solarValue * (5.0 / 1023.0);
+
+  predictedVoltage = (m * lightValue) + c;
+
+  error = actualVoltage - predictedVoltage;
+
+  m = m + (0.00001 * error * lightValue);
+  c = c + (0.001 * error);
+
+  if(m < 0) m = 0;
+  if(c < 0) c = 0;
+
+  lcd.setCursor(0,0);
+  lcd.print("P:");
+  lcd.print(predictedVoltage,2);
+  lcd.print("V ");
+
+  lcd.setCursor(0,1);
+  lcd.print("A:");
+  lcd.print(actualVoltage,2);
+  lcd.print("V ");
+
+  Serial.print("Light=");
+  Serial.print(lightValue);
+
+  Serial.print(" Pred=");
+  Serial.print(predictedVoltage,2);
+
+  Serial.print(" Act=");
+  Serial.print(actualVoltage,2);
+
+  Serial.print(" Err=");
+  Serial.print(error,2);
+
+  Serial.print(" m=");
+  Serial.print(m,6);
+
+  Serial.print(" c=");
+  Serial.println(c,4);
+
+  delay(1000);
+}
